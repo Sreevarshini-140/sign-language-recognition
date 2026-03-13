@@ -5,7 +5,7 @@ from PIL import Image
 
 st.title("Sign Language Detection AI")
 
-# Initialize MediaPipe
+# MediaPipe hands
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
 
@@ -16,17 +16,20 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-# Use camera_input (works in Streamlit Cloud)
+# Camera input (works on Streamlit Cloud)
 camera_image = st.camera_input("Turn on camera")
 
 if camera_image:
     image = np.array(Image.open(camera_image))
-    image_rgb = image.copy()  # PIL → NumPy
+    image_rgb = image.copy()  # NumPy array
+
+    # Convert RGB for Mediapipe
+    image_rgb = image_rgb[:, :, ::-1]
 
     results = hands.process(image_rgb)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(image_rgb, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+            mp_draw.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
-    st.image(image_rgb, caption="Detected Hands")
+    st.image(image, caption="Detected Hands")
