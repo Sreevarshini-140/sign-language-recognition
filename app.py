@@ -5,6 +5,7 @@ import numpy as np
 from PIL import Image
 
 st.title("Sign Language Detection AI")
+st.write("Use your camera to detect hand signs")
 
 # Initialize MediaPipe
 mp_hands = mp.solutions.hands
@@ -17,34 +18,18 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-st.write("Turn on camera to detect hand signs")
+# Take camera input
+camera_image = st.camera_input("Turn on camera")
 
-run = st.checkbox("Start Camera")
+if camera_image:
+    # Convert to OpenCV format
+    image = np.array(Image.open(camera_image))
+    image_rgb = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-FRAME_WINDOW = st.image([])
-
-camera = cv2.VideoCapture(0)
-
-while run:
-    success, frame = camera.read()
-
-    if not success:
-        st.error("Camera not accessible")
-        break
-
-    # Convert BGR → RGB
-    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-    results = hands.process(frame_rgb)
+    results = hands.process(image_rgb)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(
-                frame,
-                hand_landmarks,
-                mp_hands.HAND_CONNECTIONS
-            )
-
-    FRAME_WINDOW.image(frame)
-
-camera.release()
+            mp_draw.draw_landmarks(image_rgb, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+    
+    st.image(cv2.cvtColor(image_rgb, cv2.COLOR_BGR2RGB), caption="Detected Hands")
