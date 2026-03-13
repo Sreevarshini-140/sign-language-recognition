@@ -1,5 +1,6 @@
-streamlit==1.32.0
+streamlit
 opencv-python-headless
 mediapipe
 numpy
-h5py
+tensorflow
+pillow==10.3.0
