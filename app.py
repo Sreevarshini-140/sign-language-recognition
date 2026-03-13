@@ -5,7 +5,6 @@ from PIL import Image
 
 st.title("Sign Language Detection AI")
 
-# MediaPipe hands
 mp_hands = mp.solutions.hands
 mp_draw = mp.solutions.drawing_utils
 
@@ -16,15 +15,11 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-# Camera input (works on Streamlit Cloud)
 camera_image = st.camera_input("Turn on camera")
 
 if camera_image:
     image = np.array(Image.open(camera_image))
-    image_rgb = image.copy()  # NumPy array
-
-    # Convert RGB for Mediapipe
-    image_rgb = image_rgb[:, :, ::-1]
+    image_rgb = image[:, :, ::-1]  # Convert RGB → BGR for Mediapipe
 
     results = hands.process(image_rgb)
 
