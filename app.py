@@ -7,7 +7,11 @@ import tensorflow as tf
 st.title("Sign Language Detection AI")
 
 # Load model
-model = tf.keras.models.load_model("asl_model.h5")
+@st.cache_resource
+def load_model():
+    return tf.keras.models.load_model("asl_model.h5")
+
+model = load_model()
 
 class_names = [
     'A','B','C','D','E','F','G','H','I','J','K','L','M',
@@ -32,10 +36,7 @@ if camera_image:
     image = np.array(Image.open(camera_image))
     h, w, _ = image.shape
 
-    # Convert RGB → BGR for Mediapipe
-    image_rgb = image[:, :, ::-1]
-
-    results = hands.process(image_rgb)
+    results = hands.process(image)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
