@@ -1,8 +1,6 @@
-
-
 streamlit
 mediapipe==0.10.30
-tensorflow==2.13.0
+tensorflow-cpu==2.13.0
 numpy
 Pillow
 opencv-python-headless
