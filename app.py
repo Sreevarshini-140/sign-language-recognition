@@ -1,14 +1,13 @@
 import streamlit as st
 import cv2
-import mediapipe as mp
 import numpy as np
 from PIL import Image
 
-st.title("Sign Language Detection AI")
+import mediapipe as mp
+from mediapipe.python.solutions import hands as mp_hands
+from mediapipe.python.solutions import drawing_utils as mp_drawing
 
-# Initialize MediaPipe
-mp_hands = mp.solutions.hands
-mp_draw = mp.solutions.drawing_utils
+st.title("Sign Language Detection AI")
 
 hands = mp_hands.Hands(
     static_image_mode=False,
@@ -17,34 +16,31 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-st.write("Turn on webcam to detect hand gestures")
-
 run = st.checkbox("Start Camera")
 
-FRAME_WINDOW = st.image([])
+frame_window = st.image([])
 
-camera = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 
 while run:
-    success, frame = camera.read()
-    
-    if not success:
-        st.write("Camera not working")
+    ret, frame = cap.read()
+
+    if not ret:
+        st.write("Camera error")
         break
 
-    # Convert BGR to RGB
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     results = hands.process(frame_rgb)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(
+            mp_drawing.draw_landmarks(
                 frame,
                 hand_landmarks,
                 mp_hands.HAND_CONNECTIONS
             )
 
-    FRAME_WINDOW.image(frame)
+    frame_window.image(frame)
 
-camera.release()
+cap.release()
