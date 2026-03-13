@@ -1,11 +1,9 @@
 import streamlit as st
-import cv2
 import mediapipe as mp
 import numpy as np
 from PIL import Image
 
 st.title("Sign Language Detection AI")
-st.write("Use your camera to detect hand signs")
 
 # Initialize MediaPipe
 mp_hands = mp.solutions.hands
@@ -18,18 +16,17 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-# Take camera input
+# Use camera_input (works in Streamlit Cloud)
 camera_image = st.camera_input("Turn on camera")
 
 if camera_image:
-    # Convert to OpenCV format
     image = np.array(Image.open(camera_image))
-    image_rgb = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    image_rgb = image.copy()  # PIL → NumPy
 
     results = hands.process(image_rgb)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
             mp_draw.draw_landmarks(image_rgb, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-    
-    st.image(cv2.cvtColor(image_rgb, cv2.COLOR_BGR2RGB), caption="Detected Hands")
+
+    st.image(image_rgb, caption="Detected Hands")

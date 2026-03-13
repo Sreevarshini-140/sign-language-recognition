@@ -1,5 +1,4 @@
 streamlit>=1.32.2
-opencv-python-headless>=4.9.0.80
 mediapipe>=0.10.30
 numpy
 Pillow
