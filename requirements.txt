@@ -2,3 +2,4 @@ streamlit>=1.32.2
 mediapipe==0.8.13
 numpy
 Pillow
+tensorflow
