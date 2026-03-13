@@ -51,5 +51,5 @@ Prediction may vary based on hand position
 
 ## Author
 Sreevarshini
-GitHub https://github.com/sree098765
+GitHub https://github.com/Sreevarshini-140
 
