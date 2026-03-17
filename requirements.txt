@@ -1,6 +1,6 @@
 streamlit
-mediapipe==0.10.30
-tensorflow==2.15.0
+tensorflow
+mediapipe
 numpy
-Pillow
+pillow
 opencv-python-headless
